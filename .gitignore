@@ -1,0 +1,24 @@
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+
+# Gradle and build outputs
+.gradle/
+**/build/
+gradle/gradle-daemon-jvm.properties
+
+# Local Android SDK and signing configuration
+local.properties
+*.jks
+*.keystore
+
+# Native build outputs
+.externalNativeBuild/
+.cxx/
+
+# Generated diagnostics
+captures/
+
+# OS metadata
+.DS_Store
+Thumbs.db
