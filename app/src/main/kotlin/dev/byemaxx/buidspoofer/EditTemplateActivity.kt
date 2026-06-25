@@ -5,6 +5,8 @@ import android.text.InputType
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.R as MaterialR
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.textfield.TextInputEditText
@@ -23,6 +25,12 @@ class EditTemplateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEditTemplateBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         binding.toolbar.setNavigationOnClickListener { finish() }
 
@@ -145,7 +153,11 @@ class EditTemplateActivity : AppCompatActivity() {
                 id = editingTemplateId ?: UUID.randomUUID().toString(),
                 name = name,
                 properties = props,
-                features = sourceTemplate?.features ?: emptyList(),
+                features = if (editingTemplateId != null) {
+                    sourceTemplate?.features ?: emptyList()
+                } else {
+                    emptyList()
+                },
                 isEditable = true
             )
 

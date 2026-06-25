@@ -228,6 +228,7 @@ class MainHook : XposedModule() {
             
             val handleSysProp: (String) -> String? = { key ->
                 when {
+                    props.containsKey(key) -> props[key]
                     key == "ro.soc.model" -> props["SOC_MODEL"]
                     key == "ro.soc.manufacturer" -> props["SOC_MANUFACTURER"]
                     key.endsWith(".model") || key == "ro.product.model" || key == "ro.product.model_for_attestation" -> props["MODEL"]
@@ -260,7 +261,6 @@ class MainHook : XposedModule() {
                     key.endsWith(".cpu.abilist") -> props["SUPPORTED_ABIS"]
                     key.endsWith(".cpu.abilist32") -> props["SUPPORTED_32_BIT_ABIS"]
                     key.endsWith(".cpu.abilist64") -> props["SUPPORTED_64_BIT_ABIS"]
-                    props.containsKey(key) -> props[key]
                     else -> null
                 }
             }
