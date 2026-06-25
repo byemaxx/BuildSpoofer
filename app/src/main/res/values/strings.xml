@@ -4,6 +4,11 @@
     <string name="main_subtitle">应用级设备信息模板</string>
     <string name="active_template">当前生效模板</string>
     <string name="restart_target_hint">切换后请彻底关闭并重新打开目标应用</string>
+    <string name="per_app_config">应用独立配置</string>
+    <string name="show_system_apps">显示系统应用</string>
+    <string name="follow_global_template">跟随全局模板</string>
+    <string name="template_assigned_format">模板: %s</string>
+    <string name="search">搜索应用</string>
     <string name="templates">设备模板</string>
     <string name="create_template">新建模板</string>
     <string name="root_warning">未获取 Root 权限，本机默认模板可能缺少部分底层参数。</string>

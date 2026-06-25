@@ -34,5 +34,9 @@
             android:name=".EditTemplateActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".AppListActivity"
+            android:exported="false" />
     </application>
 </manifest>

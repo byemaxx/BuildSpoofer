@@ -71,6 +71,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+                R.id.menu_app_config -> {
+                    startActivity(Intent(this, AppListActivity::class.java))
+                    true
+                }
                 R.id.menu_about -> {
                     showAboutDialog()
                     true

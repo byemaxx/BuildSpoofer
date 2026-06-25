@@ -211,9 +211,27 @@ object TemplateManager {
         App.syncPreferences(context)
     }
 
+    fun getAppTemplateId(prefs: SharedPreferences, packageName: String): String? {
+        return prefs.getString("app_template_$packageName", null)
+    }
+
+    fun setAppTemplateId(prefs: SharedPreferences, packageName: String, templateId: String?, context: Context) {
+        if (templateId == null) {
+            prefs.edit().remove("app_template_$packageName").commit()
+        } else {
+            prefs.edit().putString("app_template_$packageName", templateId).commit()
+        }
+        App.syncPreferences(context)
+    }
+
     // For Xposed Hooks
-    fun getActiveTemplateFromXposed(prefs: SharedPreferences): Template {
-        val activeId = prefs.getString(KEY_ACTIVE_TEMPLATE_ID, "default") ?: "default"
+    fun getActiveTemplateFromXposed(prefs: SharedPreferences, packageName: String? = null): Template {
+        val activeId = if (packageName != null) {
+            prefs.getString("app_template_$packageName", null) ?: prefs.getString(KEY_ACTIVE_TEMPLATE_ID, "default") ?: "default"
+        } else {
+            prefs.getString(KEY_ACTIVE_TEMPLATE_ID, "default") ?: "default"
+        }
+        
         val customTemplatesJson = prefs.getString(KEY_CUSTOM_TEMPLATES, "[]") ?: "[]"
 
         val defaultTemplate = Template(

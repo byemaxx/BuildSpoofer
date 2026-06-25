@@ -19,7 +19,7 @@ class MainHook : XposedModule() {
 
         val template = try {
             val prefs = getRemotePreferences(TemplateManager.REMOTE_PREFS_GROUP)
-            TemplateManager.getActiveTemplateFromXposed(prefs)
+            TemplateManager.getActiveTemplateFromXposed(prefs, param.packageName)
         } catch (error: Throwable) {
             log(Log.ERROR, TAG, "Unable to read remote template preferences", error)
             return
