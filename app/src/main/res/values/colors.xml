@@ -12,4 +12,16 @@
     <color name="warning_container">#FFF4D6</color>
     <color name="warning_text">#4B3500</color>
     <color name="launcher_background">#E5F6FF</color>
+    
+    <color name="md_theme_dark_primary">#8ECDFF</color>
+    <color name="md_theme_dark_onPrimary">#003450</color>
+    <color name="md_theme_dark_primaryContainer">#004B71</color>
+    <color name="md_theme_dark_onPrimaryContainer">#CBE6FF</color>
+    <color name="md_theme_dark_secondary">#B7C8D9</color>
+    <color name="md_theme_dark_onSecondary">#22323F</color>
+    <color name="md_theme_dark_secondaryContainer">#394856</color>
+    <color name="md_theme_dark_onSecondaryContainer">#D3E4F5</color>
+    <color name="warning_dark">#FFBA29</color>
+    <color name="warning_container_dark">#5A3C00</color>
+    <color name="warning_text_dark">#FFE0A0</color>
 </resources>

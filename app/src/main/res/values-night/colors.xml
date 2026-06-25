@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="warning">@color/warning_dark</color>
+    <color name="warning_container">@color/warning_container_dark</color>
+    <color name="warning_text">@color/warning_text_dark</color>
+</resources>
