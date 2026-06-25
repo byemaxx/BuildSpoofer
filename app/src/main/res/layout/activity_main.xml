@@ -17,7 +17,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
             android:elevation="0dp"
-            app:subtitle="@string/main_subtitle"
             app:menu="@menu/menu_main"
             app:title="@string/app_name"
             app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge" />

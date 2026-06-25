@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BuidSpoofer</string>
     <string name="module_description">Spoof apps to custom device identities</string>
-    <string name="main_subtitle">应用级设备信息模板</string>
+
     <string name="active_template">当前生效模板</string>
     <string name="restart_target_hint">切换后请彻底关闭并重新打开目标应用</string>
     <string name="per_app_config">应用独立配置</string>
