@@ -79,8 +79,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadTemplates() {
         val prefs = TemplateManager.getSharedPreferences(this)
-        val custom = TemplateManager.getCustomTemplates(prefs)
         val defaultTemplate = TemplateManager.getDefaultTemplate(prefs)
+        val custom = TemplateManager.getCustomTemplates(prefs)
         val all = listOf(defaultTemplate, TemplateManager.PIXEL_10_PRO_XL) + custom
         val active = TemplateManager.getActiveTemplate(prefs)
         binding.textActiveTemplate.text = active.name
@@ -167,11 +167,12 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton(R.string.cancel, null)
             .setPositiveButton(R.string.delete) { _, _ ->
                 val prefs = TemplateManager.getSharedPreferences(this)
+                val activeId = prefs.getString(TemplateManager.KEY_ACTIVE_TEMPLATE_ID, "default")
+                
                 val custom = TemplateManager.getCustomTemplates(prefs).filter { it.id != template.id }
                 TemplateManager.saveCustomTemplates(prefs, custom, this)
 
-                val active = TemplateManager.getActiveTemplate(prefs)
-                if (active.id == template.id) {
+                if (activeId == template.id) {
                     TemplateManager.setActiveTemplateId(prefs, "default", this)
                 }
                 loadTemplates()

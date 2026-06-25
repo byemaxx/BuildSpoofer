@@ -15,6 +15,7 @@ class MainHook : XposedModule() {
 
     override fun onPackageLoaded(param: PackageLoadedParam) {
         if (!param.isFirstPackage) return
+        if (param.packageName == "dev.byemaxx.buidspoofer") return
 
         val template = try {
             val prefs = getRemotePreferences(TemplateManager.REMOTE_PREFS_GROUP)
@@ -94,14 +95,35 @@ class MainHook : XposedModule() {
         safeSet(Build::class.java, "HOST", "HOST")
         safeSet(Build::class.java, "FINGERPRINT", "FINGERPRINT")
 
+        val displayVal = props["DISPLAY"] ?: props["ID"]
+        if (!displayVal.isNullOrEmpty()) {
+            try {
+                val field = Build::class.java.getDeclaredField("DISPLAY")
+                field.isAccessible = true
+                field.set(null, displayVal)
+            } catch (error: Throwable) {
+                log(Log.WARN, TAG, "Unable to set Build.DISPLAY", error)
+            }
+        }
+
         try {
-            val field1 = Build::class.java.getDeclaredField("SUPPORTED_ABIS")
-            field1.isAccessible = true
-            field1.set(null, arrayOf("arm64-v8a"))
+            props["SUPPORTED_ABIS"]?.takeIf { it.isNotEmpty() }?.let { abis ->
+                val field1 = Build::class.java.getDeclaredField("SUPPORTED_ABIS")
+                field1.isAccessible = true
+                field1.set(null, abis.split(",").map { it.trim() }.toTypedArray())
+            }
             
-            val field2 = Build::class.java.getDeclaredField("SUPPORTED_64_BIT_ABIS")
-            field2.isAccessible = true
-            field2.set(null, arrayOf("arm64-v8a"))
+            props["SUPPORTED_64_BIT_ABIS"]?.takeIf { it.isNotEmpty() }?.let { abis ->
+                val field2 = Build::class.java.getDeclaredField("SUPPORTED_64_BIT_ABIS")
+                field2.isAccessible = true
+                field2.set(null, abis.split(",").map { it.trim() }.toTypedArray())
+            }
+
+            props["SUPPORTED_32_BIT_ABIS"]?.takeIf { it.isNotEmpty() }?.let { abis ->
+                val field3 = Build::class.java.getDeclaredField("SUPPORTED_32_BIT_ABIS")
+                field3.isAccessible = true
+                field3.set(null, abis.split(",").map { it.trim() }.toTypedArray())
+            }
         } catch (error: Throwable) {
             log(Log.WARN, TAG, "Unable to override supported ABIs", error)
         }
@@ -110,6 +132,42 @@ class MainHook : XposedModule() {
         safeSetInt(Build.VERSION::class.java, "SDK_INT", "SDK_INT")
         safeSet(Build.VERSION::class.java, "SECURITY_PATCH", "SECURITY_PATCH")
         safeSet(Build.VERSION::class.java, "INCREMENTAL", "INCREMENTAL")
+
+        val standardKeys = setOf(
+            "HARDWARE", "BOARD", "BRAND", "DEVICE", "PRODUCT", "MANUFACTURER", "MODEL", 
+            "SOC_MANUFACTURER", "SOC_MODEL", "ID", "TIME", "TAGS", "TYPE", "USER", "HOST", 
+            "FINGERPRINT", "DISPLAY", "SUPPORTED_ABIS", "SUPPORTED_64_BIT_ABIS", 
+            "SUPPORTED_32_BIT_ABIS", "RELEASE", "SDK_INT", "SECURITY_PATCH", "INCREMENTAL", 
+            "BASEBAND", "FIRST_API_LEVEL", "SDK_FULL", "BUILD_UUID", "CLIENT_ID", "TIME_SEC", 
+            "BUILD_DATE", "BOOTLOADER", "PLATFORM"
+        )
+        
+        for ((key, value) in props) {
+            if (key in standardKeys || key.contains(".")) continue
+            
+            try {
+                val field = Build::class.java.getDeclaredField(key)
+                field.isAccessible = true
+                if (field.type == Int::class.javaPrimitiveType) {
+                    value.toIntOrNull()?.let { field.set(null, it) }
+                } else if (field.type == Long::class.javaPrimitiveType) {
+                    value.toLongOrNull()?.let { field.set(null, it) }
+                } else {
+                    field.set(null, value)
+                }
+                continue
+            } catch (e: Throwable) {}
+            
+            try {
+                val field = Build.VERSION::class.java.getDeclaredField(key)
+                field.isAccessible = true
+                if (field.type == Int::class.javaPrimitiveType) {
+                    value.toIntOrNull()?.let { field.set(null, it) }
+                } else {
+                    field.set(null, value)
+                }
+            } catch (e: Throwable) {}
+        }
 
         val basebandValue = props["BASEBAND"]
         if (!basebandValue.isNullOrEmpty()) {
@@ -179,6 +237,7 @@ class MainHook : XposedModule() {
                     key.endsWith(".brand") || key == "ro.product.brand" || key == "ro.product.brand_for_attestation" -> props["BRAND"]
                     key.endsWith(".manufacturer") || key == "ro.product.manufacturer" || key == "ro.product.manufacturer_for_attestation" -> props["MANUFACTURER"]
                     key.endsWith(".board") || key == "ro.product.board" -> props["DEVICE"]
+                    key.endsWith(".build.display.id") || key == "ro.build.display.id" -> props["DISPLAY"] ?: props["ID"]
                     key.endsWith(".build.fingerprint") || key == "ro.build.fingerprint" -> props["FINGERPRINT"]
                     key.endsWith(".build.id") || key == "ro.build.id" -> props["ID"]
                     key.endsWith(".build.tags") || key == "ro.build.tags" -> props["TAGS"]
@@ -201,10 +260,11 @@ class MainHook : XposedModule() {
                     key.endsWith(".build.date") -> props["BUILD_DATE"]
                     key.endsWith(".build.date.utc") -> props["TIME_SEC"]
                     key.contains("baseband") -> props["BASEBAND"]
-                    key.endsWith(".cpu.abilist") -> "arm64-v8a"
-                    key.endsWith(".cpu.abilist32") -> ""
-                    key.endsWith(".cpu.abilist64") -> "arm64-v8a"
+                    key.endsWith(".cpu.abilist") -> props["SUPPORTED_ABIS"]
+                    key.endsWith(".cpu.abilist32") -> props["SUPPORTED_32_BIT_ABIS"]
+                    key.endsWith(".cpu.abilist64") -> props["SUPPORTED_64_BIT_ABIS"]
                     key == "ro.build.flavor" -> props["DEVICE"]?.takeIf { it.isNotEmpty() }?.let { "$it-user" }
+                    props.containsKey(key) -> props[key]
                     else -> null
                 }
             }

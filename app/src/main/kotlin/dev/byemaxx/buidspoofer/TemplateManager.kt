@@ -130,6 +130,7 @@ object TemplateManager {
         mappedProps["MANUFACTURER"] = sysProps["ro.product.manufacturer"] ?: Build.MANUFACTURER
         mappedProps["FINGERPRINT"] = sysProps["ro.build.fingerprint"] ?: Build.FINGERPRINT
         mappedProps["ID"] = sysProps["ro.build.id"] ?: Build.ID
+        mappedProps["DISPLAY"] = sysProps["ro.build.display.id"] ?: Build.DISPLAY
         mappedProps["BOOTLOADER"] = sysProps["ro.bootloader"] ?: Build.BOOTLOADER
         mappedProps["SOC_MANUFACTURER"] = sysProps["ro.soc.manufacturer"] ?: ""
         mappedProps["SOC_MODEL"] = sysProps["ro.soc.model"] ?: ""

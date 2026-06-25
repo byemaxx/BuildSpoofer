@@ -105,6 +105,15 @@
             <!-- Group headings and property inputs are inserted here. -->
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddProperty"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="添加自定义属性"
+                app:icon="@drawable/ic_add" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
