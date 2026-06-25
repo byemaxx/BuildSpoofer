@@ -20,7 +20,7 @@ It can override common `Build` and system property values, advertise Pixel-speci
 ## Spoofing Modes
 
 - **Full Pixel Spoof**: Modifies almost all hardware and build properties, and enables Pixel-exclusive features (like Google Camera features, Next Generation Assistant, etc.). Best used for unlocking features in specific target applications.
-- **Pixel OTA Minimal Spoof**: Only changes a few specific build strings (`FINGERPRINT`, `DESCRIPTION`, `ID`, `DISPLAY`, `INCREMENTAL`, `SECURITY_PATCH`). This is strictly intended for bypassing Google Play Services OTA update checks. When using this mode, limit your LSPosed scope to **only** `com.google.android.gms` and (optionally) `com.android.settings`. Do not include other apps.
+- **Custom Templates**: You can create custom templates and manually fill in only the specific fields you want to spoof (e.g., for minimal OTA spoofing). Properties left blank will fall back to your device's original values.
 
 ## Technical Notes & Limitations
 

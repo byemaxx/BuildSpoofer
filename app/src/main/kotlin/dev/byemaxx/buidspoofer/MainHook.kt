@@ -76,7 +76,6 @@ class MainHook : XposedModule() {
             }
         }
 
-        safeSet(Build::class.java, "DISPLAY", "ID")
         safeSet(Build::class.java, "BOOTLOADER", "BOOTLOADER")
         safeSet(Build::class.java, "HARDWARE", "DEVICE")
         safeSet(Build::class.java, "BOARD", "DEVICE")
@@ -248,13 +247,11 @@ class MainHook : XposedModule() {
                     key == "ro.bootloader" || key == "ro.build.expect.bootloader" -> props["BOOTLOADER"]
                     key == "ro.build.description" -> props["DESCRIPTION"]
                     key.startsWith("ro.com.google.clientidbase") -> props["CLIENT_ID"]
-                    key == "ro.opa.eligible_device" -> "true"
                     key.endsWith(".build.version.release") || key == "ro.build.version.release_or_codename" -> props["RELEASE"]
                     key.endsWith(".build.version.sdk") -> props["SDK_INT"]
                     key.endsWith(".build.version.security_patch") -> props["SECURITY_PATCH"]
                     key.endsWith(".build.version.incremental") -> props["INCREMENTAL"]
                     key == "ro.product.first_api_level" -> props["FIRST_API_LEVEL"]
-                    key == "ro.build.characteristics" -> "nosdcard"
                     key.endsWith(".build.version.sdk_full") -> props["SDK_FULL"]
                     key.endsWith(".build.uuid") -> props["BUILD_UUID"]
                     key.endsWith(".build.date") -> props["BUILD_DATE"]
@@ -263,7 +260,6 @@ class MainHook : XposedModule() {
                     key.endsWith(".cpu.abilist") -> props["SUPPORTED_ABIS"]
                     key.endsWith(".cpu.abilist32") -> props["SUPPORTED_32_BIT_ABIS"]
                     key.endsWith(".cpu.abilist64") -> props["SUPPORTED_64_BIT_ABIS"]
-                    key == "ro.build.flavor" -> props["DEVICE"]?.takeIf { it.isNotEmpty() }?.let { "$it-user" }
                     props.containsKey(key) -> props[key]
                     else -> null
                 }
